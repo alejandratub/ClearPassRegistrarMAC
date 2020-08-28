@@ -16,7 +16,7 @@
         </div>
         <div class="form-group">
           <label>Token de Accesso ClearPass</label>
-          <input formControlName="token" type="text" class="form-control"  name="password" placeholder="token">
+          <input formControlName="token" type="text" class="form-control"  name="token" placeholder="token">
           <div *ngIf="f.token.touched && f.token.invalid" class="alert alert-danger">
             <div *ngIf="f.token.errors.required">Ingrese el Token de Acceso.</div>
         </div>
@@ -31,15 +31,45 @@
         </div>
         <div class="form-group">
           <div class="col-xs-3">
-            <input  (change)="onFileChange($event)" formControlName="file" type="file" name="profilepic" />
+            <input type="file" #csvReader name="Upload CSV"  formControlName="file"  id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />
+            
              <div *ngIf="f.file.touched && f.file.invalid" class="alert alert-danger">
             <div *ngIf="f.file.errors.required">Seleccione el arvhivo a cargar.</div>
         </div>
           </div>
         </div>
 
-        <button  class="btn btn-outline-primary">Cargar</button>
+        <table class="minimalistBlack" *ngIf="records.length > 0">    
+          <thead>    
+            <tr>    
+              <th>MacAddress </th>      
+            </tr>    
+          </thead>    
+          <tbody>    
+            <tr *ngFor="let record of records;let i = index;">    
+              <td> <span>{{record.macadress}}</span> </td>     
+            </tr>    
+          </tbody>    
+        </table> 
+
+        <button  class="btn btn-outline-primary" >Cargar</button>
+
+
       </form>
     </div>
   </div>
+
+  <!--input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />    
+<table class="minimalistBlack" *ngIf="records.length > 0">    
+  <thead>    
+    <tr>    
+      <th>MacAddress </th>      
+    </tr>    
+  </thead>    
+  <tbody>    
+    <tr *ngFor="let record of records;let i = index;">    
+      <td> <span>{{record.macadress}}</span> </td>     
+    </tr>    
+  </tbody>    
+</table--> 
 

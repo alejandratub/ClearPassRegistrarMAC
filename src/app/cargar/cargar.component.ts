@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
-
+import { CSVRecord } from '../CSVModel';  
 
 @Component({
   selector: 'app-cargar',
@@ -11,6 +11,8 @@ import { FormGroup, FormControl, Validators} from '@angular/forms';
 export class CargarComponent implements OnInit {
   
   
+  //uploader: FileUploader = new FileUploader({ url: "api/your_upload", removeAfterUpload: false, autoUpload: true });
+
 
   myForm = new FormGroup({
     direccionIP: new FormControl('', [Validators.required, Validators.minLength(7)]),
@@ -18,6 +20,7 @@ export class CargarComponent implements OnInit {
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required])
   });
+  
     
   constructor(private http: HttpClient) { }
       
@@ -35,17 +38,74 @@ export class CargarComponent implements OnInit {
     }
   }
      
-  submit(){
-    const formData = new FormData();
-    formData.append('file', this.myForm.get('fileSource').value);
-   
-    this.http.post('http://localhost:8001/upload.php', formData)
-      .subscribe(res => {
-        console.log(res);
-        alert('Uploaded Successfully.');
-      })
-  }
+  submit(){}
+
+
+  public records: any[] = [];  
+  @ViewChild('csvReader') csvReader: any;  
+
+
+  uploadListener($event: any): void {  
   
+    let text = [];  
+    let files = $event.srcElement.files;  
+  
+    if (this.isValidCSVFile(files[0])) {  
+  
+      let input = $event.target;  
+      let reader = new FileReader();  
+      reader.readAsText(input.files[0]);  
+  
+      reader.onload = () => {  
+        let csvData = reader.result;  
+        let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);  
+  
+        let headersRow = this.getHeaderArray(csvRecordsArray);  
+  
+        this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);  
+      };  
+  
+      reader.onerror = function () {  
+        console.log('error is occured while reading file!');  
+      };  
+  
+    } else {  
+      alert("Please import valid .csv file.");  
+      this.fileReset();  
+    }  
+  }
+
+
+  getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {  
+    let csvArr = [];  
+  
+    for (let i = 1; i < csvRecordsArray.length; i++) {  
+      let curruntRecord = (<string>csvRecordsArray[i]).split(',');  
+      if (curruntRecord.length == headerLength) {  
+        let csvRecord: CSVRecord = new CSVRecord();  
+        csvRecord.macadress = curruntRecord[0].trim();  
+        csvArr.push(csvRecord);  
+      }  
+    }  
+    return csvArr;  
+  }  
+  isValidCSVFile(file: any) {  
+    return file.name.endsWith(".csv");  
+  }  
+
+  getHeaderArray(csvRecordsArr: any) {  
+    let headers = (<string>csvRecordsArr[0]).split(',');  
+    let headerArray = [];  
+    for (let j = 0; j < headers.length; j++) {  
+      headerArray.push(headers[j]);  
+    }  
+    return headerArray;  
+  }  
+
+  fileReset() {  
+    this.csvReader.nativeElement.value = "";  
+    this.records = [];  
+  }  
 
   ngOnInit(): void {}
 
