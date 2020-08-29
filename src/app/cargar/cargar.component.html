@@ -8,15 +8,15 @@
       <form [formGroup]="myForm" (ngSubmit)="submit()" class="px-4 py-3">
         <div class="form-group">
           <label>Dirección IP Clear Pass</label>
-          <input formControlName="direccionIP" type="text" class="form-control"  name="ip" placeholder="IPv4">
+          <input  formControlName="direccionIP" type="text" class="form-control"  name="ip" placeholder="IPv4">
           <div *ngIf="f.direccionIP.touched && f.direccionIP.invalid" class="alert alert-danger">
             <div *ngIf="f.direccionIP.errors.required">Ingrese la dirección IP.</div>
-            <div *ngIf="f.direccionIP.errors.minlength">Direccion IP debe contar con al menos 7 caracteres.</div>
+            <div *ngIf="f.direccionIP.errors.minlength">Ingrese una direccion IP valida</div>
         </div>
         </div>
         <div class="form-group">
           <label>Token de Accesso ClearPass</label>
-          <input formControlName="token" type="text" class="form-control"  name="token" placeholder="token">
+          <input  formControlName="token" type="text" class="form-control"  name="token" placeholder="token">
           <div *ngIf="f.token.touched && f.token.invalid" class="alert alert-danger">
             <div *ngIf="f.token.errors.required">Ingrese el Token de Acceso.</div>
         </div>
@@ -39,37 +39,10 @@
           </div>
         </div>
 
-        <table class="minimalistBlack" *ngIf="records.length > 0">    
-          <thead>    
-            <tr>    
-              <th>MacAddress </th>      
-            </tr>    
-          </thead>    
-          <tbody>    
-            <tr *ngFor="let record of records;let i = index;">    
-              <td> <span>{{record.macadress}}</span> </td>     
-            </tr>    
-          </tbody>    
-        </table> 
-
-        <button  class="btn btn-outline-primary" >Cargar</button>
+        <button  class="btn btn-outline-primary"  type="submit" >Cargar</button>
 
 
       </form>
     </div>
   </div>
-
-  <!--input type="file" #csvReader name="Upload CSV" id="txtFileUpload" (change)="uploadListener($event)" accept=".csv" />    
-<table class="minimalistBlack" *ngIf="records.length > 0">    
-  <thead>    
-    <tr>    
-      <th>MacAddress </th>      
-    </tr>    
-  </thead>    
-  <tbody>    
-    <tr *ngFor="let record of records;let i = index;">    
-      <td> <span>{{record.macadress}}</span> </td>     
-    </tr>    
-  </tbody>    
-</table--> 
 

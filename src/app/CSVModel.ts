@@ -1,3 +1,3 @@
 export class CSVRecord {  
-    public macadress: any;    
+    public mac_address: any;    
   } 

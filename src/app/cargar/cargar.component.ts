@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
 import { CSVRecord } from '../CSVModel';  
+import { ClearpassService }  from '../clearpass.service'
 
 @Component({
   selector: 'app-cargar',
@@ -12,7 +13,8 @@ export class CargarComponent implements OnInit {
   
   
   //uploader: FileUploader = new FileUploader({ url: "api/your_upload", removeAfterUpload: false, autoUpload: true });
-
+  //direccionIP: string;
+  //token: string;
 
   myForm = new FormGroup({
     direccionIP: new FormControl('', [Validators.required, Validators.minLength(7)]),
@@ -21,25 +23,16 @@ export class CargarComponent implements OnInit {
     fileSource: new FormControl('', [Validators.required])
   });
   
+
     
-  constructor(private http: HttpClient) { }
+  constructor( public ClearpassService: ClearpassService, private http: HttpClient) { }
       
   get f(){
     return this.myForm.controls;
   }
-     
-  onFileChange(event) {
-  
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0];
-      this.myForm.patchValue({
-        fileSource: file
-      });
-    }
-  }
-     
-  submit(){}
 
+     
+  
 
   public records: any[] = [];  
   @ViewChild('csvReader') csvReader: any;  
@@ -49,8 +42,6 @@ export class CargarComponent implements OnInit {
   
     let text = [];  
     let files = $event.srcElement.files;  
-  
-    if (this.isValidCSVFile(files[0])) {  
   
       let input = $event.target;  
       let reader = new FileReader();  
@@ -63,18 +54,14 @@ export class CargarComponent implements OnInit {
         let headersRow = this.getHeaderArray(csvRecordsArray);  
   
         this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);  
+
       };  
   
       reader.onerror = function () {  
         console.log('error is occured while reading file!');  
       };  
-  
-    } else {  
-      alert("Please import valid .csv file.");  
-      this.fileReset();  
-    }  
-  }
 
+  }
 
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {  
     let csvArr = [];  
@@ -83,15 +70,14 @@ export class CargarComponent implements OnInit {
       let curruntRecord = (<string>csvRecordsArray[i]).split(',');  
       if (curruntRecord.length == headerLength) {  
         let csvRecord: CSVRecord = new CSVRecord();  
-        csvRecord.macadress = curruntRecord[0].trim();  
+        csvRecord.mac_address = curruntRecord[0].trim();  
         csvArr.push(csvRecord);  
       }  
     }  
     return csvArr;  
+    
   }  
-  isValidCSVFile(file: any) {  
-    return file.name.endsWith(".csv");  
-  }  
+
 
   getHeaderArray(csvRecordsArr: any) {  
     let headers = (<string>csvRecordsArr[0]).split(',');  
@@ -102,10 +88,17 @@ export class CargarComponent implements OnInit {
     return headerArray;  
   }  
 
-  fileReset() {  
-    this.csvReader.nativeElement.value = "";  
-    this.records = [];  
-  }  
+  submit(){
+  
+    for (let j = 0; j < this.records.length; j++) {  
+      console.log(this.records[j]);
+     
+      this.ClearpassService.registrarMac(this.myForm.get('direccionIP').value,this.myForm.get('token').value,this.records[j]);
+    } 
+    console.log('records' + this.records);
+
+  }
+
 
   ngOnInit(): void {}
 

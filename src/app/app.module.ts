@@ -5,7 +5,6 @@ import { AppComponent } from './app.component';
 import { CargarComponent } from './cargar/cargar.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-//import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
