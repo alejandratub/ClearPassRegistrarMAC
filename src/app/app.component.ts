@@ -101,7 +101,8 @@ export class AppComponent {
   async submit() {
     await this.asyncForEach(this.records, async (record: any, index: any) => {
       console.log(index);
-      await this.ClearpassService.registrarMac(this.myForm.get('direccionIP').value, this.myForm.get('token').value, record)
+     await this.ClearpassService.registrarMac(this.myForm.get('direccionIP').value, this.myForm.get('token').value, record)
+
         .then((result: any) => {
           console.log(result);
         })
@@ -110,7 +111,7 @@ export class AppComponent {
         });
     });
 
-    // this.successNotification();
+    this.successNotification();
   }
 
 

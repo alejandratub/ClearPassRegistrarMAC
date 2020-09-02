@@ -11,16 +11,13 @@ export class ClearpassService {
 
   constructor(private http: HttpClient) { }
 
-  async registrarMac(direccionIP, token, csvrecord: CSVRecord) {
-    const url = 'http://' + direccionIP + ':443/api/endpoint';
-    // console.log('url: ' + url);
-    // console.log('token' + token);
-    //console.log('MAC: '+ macAddress);
+  async registrarMac(direccionIP: any, token: any, csvrecord: CSVRecord) {
+    const url = `https://${direccionIP}:443/api/endpoint`;
+    const body = {
+      mac_address: csvrecord.mac_address,
+      status: csvrecord.status
+    }
     const headers = { 'Authorization': token, 'Content-Type': 'application/json' }
-    //const body = {macAddress, 'status': 'Unknown'}
-    const body = JSON.stringify(csvrecord);
-    // console.log('Body' + body);
-
-    return this.http.post(url, body, { headers: headers }).toPromise();
+    return  await this.http.post(url, body, { headers: headers }).toPromise();
   }
 }
