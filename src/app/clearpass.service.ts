@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CSVRecord } from './CSVModel';
-import { Observable } from 'rxjs';
 
 
 @Injectable({
@@ -18,6 +17,9 @@ export class ClearpassService {
       status: csvrecord.status
     }
     const headers = { 'Authorization': token, 'Content-Type': 'application/json' }
+
     return  await this.http.post(url, body, { headers: headers }).toPromise();
+
+ 
   }
 }
