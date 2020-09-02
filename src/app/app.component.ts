@@ -129,7 +129,7 @@ export class AppComponent {
       showCancelButton: false,
       confirmButtonText: 'Ok',
     }).then((result) => {
-      this.reloadPage();
+     // this.reloadPage();
     })
   }
 
