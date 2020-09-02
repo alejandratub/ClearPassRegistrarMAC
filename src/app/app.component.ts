@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild , ElementRef} from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormControl, Validators} from '@angular/forms';
-import { CSVRecord } from './CSVModel';  
-import { ClearpassService }  from './clearpass.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { CSVRecord } from './CSVModel';
+import { ClearpassService } from './clearpass.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js';
 
 @Component({
@@ -23,92 +23,98 @@ export class AppComponent {
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required])
   });
-  
 
-    
-  constructor( public ClearpassService: ClearpassService, private http: HttpClient) { }
-      
-  get f(){
+
+
+  constructor(public ClearpassService: ClearpassService, private http: HttpClient) { }
+
+  get f() {
     return this.myForm.controls;
   }
 
-     
-  
-
-  public records: any[] = [];  
-  @ViewChild('csvReader') csvReader: any;  
 
 
 
-  uploadListener($event: any): void {  
-  
-    let text = [];  
-    let files = $event.srcElement.files;  
-  
-      let input = $event.target;  
-      let reader = new FileReader();  
-      reader.readAsText(input.files[0]);  
-  
-      reader.onload = () => {  
-        let csvData = reader.result;  
-        let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);  
-  
-        let headersRow = this.getHeaderArray(csvRecordsArray);  
-  
-        this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);  
+  public records: any[] = [];
+  @ViewChild('csvReader') csvReader: any;
 
-      };  
-  
-      reader.onerror = function () {  
-        console.log('error is occured while reading file!');  
-      };  
+
+
+  uploadListener($event: any): void {
+
+    let text = [];
+    let files = $event.srcElement.files;
+
+    let input = $event.target;
+    let reader = new FileReader();
+    reader.readAsText(input.files[0]);
+
+    reader.onload = () => {
+      let csvData = reader.result;
+      let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);
+
+      let headersRow = this.getHeaderArray(csvRecordsArray);
+
+      this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray, headersRow.length);
+
+    };
+
+    reader.onerror = function () {
+      console.log('error is occured while reading file!');
+    };
 
   }
 
-  getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {  
-    let csvArr = [];  
-  
-    for (let i = 1; i < csvRecordsArray.length; i++) {  
-      let curruntRecord = (<string>csvRecordsArray[i]).split(',');  
-      if (curruntRecord.length == headerLength) {  
-        let csvRecord: CSVRecord = new CSVRecord();  
-        csvRecord.mac_address = curruntRecord[0].trim();  
+  getDataRecordsArrayFromCSVFile(csvRecordsArray: any, headerLength: any) {
+    let csvArr = [];
+
+    for (let i = 1; i < csvRecordsArray.length; i++) {
+      let curruntRecord = (<string>csvRecordsArray[i]).split(',');
+      if (curruntRecord.length == headerLength) {
+        let csvRecord: CSVRecord = new CSVRecord();
+        csvRecord.mac_address = curruntRecord[0].trim();
         csvRecord.status = curruntRecord[1].trim()
-        csvArr.push(csvRecord);  
-      }  
-    }  
-    return csvArr;  
-    
-  }  
-
-
-  getHeaderArray(csvRecordsArr: any) {  
-    let headers = (<string>csvRecordsArr[0]).split(',');  
-    let headerArray = [];  
-    for (let j = 0; j < headers.length; j++) {  
-      headerArray.push(headers[j]);  
-    }  
-    return headerArray;  
-  }  
-
-  submit(){
-  
-    for (let j = 0; j < this.records.length; j++) {  
-      console.log(this.records[j]);
-     
-      this.ClearpassService.registrarMac(this.myForm.get('direccionIP').value,this.myForm.get('token').value,this.records[j]).subscribe(data => {console.log(data)})
-   
-    
-    } 
-    console.log('records' + this.records);
-
-
-    this.successNotification();
+        csvArr.push(csvRecord);
+      }
+    }
+    return csvArr;
 
   }
 
 
-  successNotification(){
+  getHeaderArray(csvRecordsArr: any) {
+    let headers = (<string>csvRecordsArr[0]).split(',');
+    let headerArray = [];
+    for (let j = 0; j < headers.length; j++) {
+      headerArray.push(headers[j]);
+    }
+    return headerArray;
+  }
+
+
+  async asyncForEach(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array)
+    }
+  }
+
+  async submit() {
+    await this.asyncForEach(this.records, async (record: any, index: any) => {
+      console.log(index);
+      await this.ClearpassService.registrarMac(this.myForm.get('direccionIP').value, this.myForm.get('token').value, record)
+        .then((result: any) => {
+          console.log(result);
+        })
+        .catch((error: any) => {
+          console.log(error);
+        });
+    });
+
+    // this.successNotification();
+  }
+
+
+  successNotification() {
     //Swal.fire('Hi', 'We have been informed!', 'success')
     Swal.fire({
       title: 'Registro Direeciones MAC',
@@ -117,14 +123,11 @@ export class AppComponent {
       showCancelButton: false,
       confirmButtonText: 'Ok',
     }).then((result) => {
-     this.reloadPage();
+      this.reloadPage();
     })
-  }  
-   
-  
-  
-  
-@ViewChild('alert', { static: true }) alert: ElementRef;
+  }
+
+  @ViewChild('alert', { static: true }) alert: ElementRef;
 
 
 
@@ -134,14 +137,14 @@ export class AppComponent {
     this.reloadPage();
   }
 
-  reloadPage() : void {
+  reloadPage(): void {
     window.location.reload();
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
 
-  }
+}
 
 
 
