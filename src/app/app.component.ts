@@ -11,6 +11,7 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  public loading = false;
   title = 'ClearPassUI';
 
   //uploader: FileUploader = new FileUploader({ url: "api/your_upload", removeAfterUpload: false, autoUpload: true });
@@ -74,6 +75,7 @@ export class AppComponent {
         let csvRecord: CSVRecord = new CSVRecord();
         csvRecord.mac_address = curruntRecord[0].trim();
         csvRecord.status = curruntRecord[1].trim()
+        csvRecord.description = curruntRecord[2].trim()
         csvArr.push(csvRecord);
       }
     }
@@ -99,6 +101,8 @@ export class AppComponent {
   }
 
   async submit() {
+    this.loading = true;
+   
     await this.asyncForEach(this.records, async (record: any, index: any) => {
       console.log(index);
      await this.ClearpassService.registrarMac(this.myForm.get('direccionIP').value, this.myForm.get('token').value, record)
@@ -110,10 +114,11 @@ export class AppComponent {
           console.log(error);
         });
     });
-
+    this.loading = false;
     this.successNotification();
   }
 
+ 
 
   successNotification() {
     //Swal.fire('Hi', 'We have been informed!', 'success')

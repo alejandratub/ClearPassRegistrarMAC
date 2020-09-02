@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module'; // CLI imports AppRouti
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxLoadingModule } from 'ngx-loading';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule, 
+    NgxLoadingModule.forRoot({})
     //FileUploadModule
     
   ],
