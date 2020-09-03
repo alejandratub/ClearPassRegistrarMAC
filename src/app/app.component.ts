@@ -121,9 +121,8 @@ export class AppComponent {
  
 
   successNotification() {
-    //Swal.fire('Hi', 'We have been informed!', 'success')
     Swal.fire({
-      title: 'Registro Direeciones MAC',
+      title: 'Registro Direciones MAC',
       text: 'Proceso terminado',
       icon: 'success',
       showCancelButton: false,

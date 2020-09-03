@@ -7,7 +7,7 @@ import * as url from 'url';
 // Inicializamos la ventana de Electron
 let win: BrowserWindow;
 function createWindow() {
-    win = new BrowserWindow({ width: 800, height: 600 });
+    win = new BrowserWindow({ width: 800, height: 600, icon:'../src/favicon.icns'});
 
     win.loadURL(
         url.format({
@@ -17,12 +17,12 @@ function createWindow() {
         })
     );
 
-    win.webContents.openDevTools();
-
     win.on('closed', () => {
         win = null;
     });
 }
+
+
 // Para ver el estado de la app
 app.on('ready', createWindow)
 
@@ -31,3 +31,6 @@ app.on('activate', () => {
         createWindow()
     }
 })
+
+
+

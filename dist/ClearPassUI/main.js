@@ -285,9 +285,8 @@ var AppComponent = /** @class */ (function () {
         });
     };
     AppComponent.prototype.successNotification = function () {
-        //Swal.fire('Hi', 'We have been informed!', 'success')
         sweetalert2_dist_sweetalert2_js__WEBPACK_IMPORTED_MODULE_4___default.a.fire({
-            title: 'Registro Direeciones MAC',
+            title: 'Registro Direciones MAC',
             text: 'Proceso terminado',
             icon: 'success',
             showCancelButton: false,
