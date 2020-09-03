@@ -12,6 +12,8 @@ import Swal from 'sweetalert2/dist/sweetalert2.js';
 })
 export class AppComponent {
   public loading = false;
+  public contador = false;
+  
   title = 'ClearPassUI';
 
   //uploader: FileUploader = new FileUploader({ url: "api/your_upload", removeAfterUpload: false, autoUpload: true });
@@ -112,10 +114,22 @@ export class AppComponent {
         })
         .catch((error: any) => {
           console.log(error);
+          this.contador = true;
+          return 
+          
         });
     });
+
+    if(this.contador = false){
     this.loading = false;
     this.successNotification();
+    }
+    else if (this.contador = true){
+      this.loading = false;
+      this.errorNotification();
+    }
+   
+    
   }
 
  
@@ -125,6 +139,18 @@ export class AppComponent {
       title: 'Registro Direciones MAC',
       text: 'Proceso terminado',
       icon: 'success',
+      showCancelButton: false,
+      confirmButtonText: 'Ok',
+    }).then((result) => {
+     // this.reloadPage();
+    })
+  }
+
+  errorNotification() {
+    Swal.fire({
+      title: 'Error en el Proceso',
+      text: 'Verifique la información e intente nuevamente',
+      icon: 'error',
       showCancelButton: false,
       confirmButtonText: 'Ok',
     }).then((result) => {
